@@ -1,7 +1,7 @@
 from utils import *
 import os
 # get all the folder path under the data_dir
-data_dir = '/Users/yanchenwang/Desktop/Data/T1'
+data_dir = '/Users/yanchenwang/Data/T1'
 folder_list = os.listdir(data_dir)
 
 processed_ecg_df = pd.DataFrame(columns=['ecg_file', 'rmssd'])
@@ -54,32 +54,35 @@ import matplotlib.pyplot as plt
 # make x label from min to max with step 30
 x = np.arange(min(processed_ecg_df['rmssd']), max(processed_ecg_df['rmssd']), 10)
 # plot the distribution of task rmssd
-sns.distplot(task_rmssd, bins=x, label='task', color='red')
+sns.distplot(task_rmssd, bins=x, label='Task', color='red')
 # plot the distribution of rest rmssd
-sns.distplot(rest_rmssd, bins=x, label='rest', color='blue')
+sns.distplot(rest_rmssd, bins=x, label='Rest', color='blue')
 plt.xlabel('RMSSD')
 plt.ylabel('Density')
 plt.legend()
-plt.show()
+plt.savefig('rmssd.png')
 plt.close()
 
 # plot the distribution of task
 x = np.arange(min(task_rmssd), max(task_rmssd), 10)
-sns.distplot(task_rmssd, bins=x, label='task', color='red')
-plt.xlabel('RMSSD')
+sns.distplot(task_rmssd, bins=x, label='Task', color='red')
+plt.xlabel('RMSSD(ms)')
 plt.ylabel('Density')
 plt.legend()
-plt.show()
+plt.savefig('task_rmssd.png')
 plt.close()
 
 # plot the distribution of rest
 x = np.arange(min(rest_rmssd), max(rest_rmssd), 10)
-sns.distplot(rest_rmssd, bins=x, label='rest', color='blue')
-plt.xlabel('RMSSD')
+sns.distplot(rest_rmssd, bins=x, label='Rest', color='blue')
+plt.xlabel('RMSSD(ms)')
 plt.ylabel('Density')
 plt.legend()
-plt.show()
+plt.savefig('rest_rmssd.png')
 plt.close()
+
+# save the processed data
+processed_ecg_df.to_csv('processed_ecg_df.csv', index=False)
 
 
 
