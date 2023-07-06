@@ -15,9 +15,14 @@ df['session_id'] = df['ExternalIdentifier'].str.split('_').str[0]
 # delete external identifier column
 df = df.drop(columns=['ExternalIdentifier'])
 
+# if the entry contains 'session', then swap the subject id and session id
+df.loc[df['subject_id'].str.contains('session'), ['subject_id', 'session_id']] = df.loc[
+    df['subject_id'].str.contains('session'), ['session_id', 'subject_id']].values
+
+
 # convert subject id and seesion id to int, some of them are subject99, convert them to 99, some is 010, convert them to 10
-df['subject_id'] = df['subject_id'].str.replace('session', '').astype(int)
-df['session_id'] = df['session_id'].str.replace('subject', '').astype(int)
+df['subject_id'] = df['subject_id'].str.replace('subject', '').astype(int)
+df['session_id'] = df['session_id'].str.replace('session', '').astype(int)
 # select subject 1, session 1-3, 7-9, 13-15;subject 2 session 4-6, 10 -12, 16-18
 # df_1 = df[(df['subject_id'] == 1) & (df['session_id'].isin([1, 2, 3, 7, 8, 9, 13, 14, 15]))]
 # df_2 = df[(df['subject_id'] == 2) & (df['session_id'].isin([4, 5, 6, 10, 11, 12, 16, 17, 18]))]
@@ -43,8 +48,10 @@ df = df[['subject_id', 'session_id', 'Results', 'Accuracy','Game_FK','StartLevel
 # rename the column results to time(average)
 # df = df.rename(columns={'Results': 'reaction time(average)'})
 # read xslx file to a dataframe, which xslx contains several sheets, I want to read the first sheet
-df_2 = pd.read_excel('map.xlsx', sheet_name='Mixed Signals Difficulty')
-df_3 = pd.read_excel('map.xlsx', sheet_name='Mixed Signals Threshold')
+
+Task = 'Task 4'
+df_2 = pd.read_excel('map.xlsx', sheet_name='{} Difficulty'.format(Task))
+df_3 = pd.read_excel('map.xlsx', sheet_name='{} Threshold'.format(Task))
 # only remain firs 8 rows
 df_2 = df_2.iloc[:8]
 df_3 = df_3.iloc[:8]
@@ -74,4 +81,4 @@ df['Threshold'] = df.apply(lambda x: df_3.loc[x['subject_id'], str(x['session_id
 df['block_id'] = df.groupby(['subject_id', 'session_id']).cumcount() + 1
 print(df)
 # save the dataframe to csv file
-df.to_csv('temp.csv', index=False)
+df.to_csv('{}.csv'.format(Task), index=False)
