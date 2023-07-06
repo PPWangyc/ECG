@@ -2,3 +2,5 @@
 *.jpg
 __pycache__
 *.csv
+*.xlsx
+.DS_Store
