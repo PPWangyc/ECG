@@ -49,7 +49,7 @@ df = df[['subject_id', 'session_id', 'Results', 'Accuracy','Game_FK','StartLevel
 # df = df.rename(columns={'Results': 'reaction time(average)'})
 # read xslx file to a dataframe, which xslx contains several sheets, I want to read the first sheet
 
-Task = 'Task 4'
+Task = 'Mixed Signals'
 df_2 = pd.read_excel('map.xlsx', sheet_name='{} Difficulty'.format(Task))
 df_3 = pd.read_excel('map.xlsx', sheet_name='{} Threshold'.format(Task))
 # only remain firs 8 rows
@@ -80,5 +80,5 @@ df['Threshold'] = df.apply(lambda x: df_3.loc[x['subject_id'], str(x['session_id
 # add another column called block id, which start from 1 and increase by 1 when subject id, session id changes
 df['block_id'] = df.groupby(['subject_id', 'session_id']).cumcount() + 1
 print(df)
-# save the dataframe to csv file
-df.to_csv('{}.csv'.format(Task), index=False)
+# save the dataframe to excel file
+df.to_excel('{}.xlsx'.format(Task), index=False)
